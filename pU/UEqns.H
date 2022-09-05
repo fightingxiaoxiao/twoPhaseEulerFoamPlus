@@ -9,6 +9,38 @@ fvVectorMatrix U2Eqn(U2, rho2.dimensions()*U2.dimensions()*dimVolume/dimTime);
 
 volScalarField Kd(fluid.Kd());
 
+volVectorField Ftd 
+(
+    IOobject
+    (
+        "Ftd",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    Kd * phase2.turbulence().nut() * fvc::grad(alpha1)
+);
+
+volVectorField tauSnow 
+(
+    IOobject
+    (
+        "tauSnow",
+        runTime.timeName(),
+        mesh,
+        IOobject::NO_READ,
+        IOobject::AUTO_WRITE
+    ),
+    fvc::div(phase1.turbulence().devRhoReff())
+);
+
+if (runTime.outputTime())
+{
+    Ftd.write();
+    tauSnow.write();
+}
+
 {
     volScalarField Vm(fluid.Vm());
 
@@ -31,7 +63,8 @@ volScalarField Kd(fluid.Kd());
         );
         U1Eqn.relax();
         U1Eqn += fvm::Sp(Kd, U1);
-        U1Eqn += -Kd * phase2.turbulence().nut() * fvc::grad(alpha1);
+        U1Eqn -= Ftd;
+
         fvOptions.constrain(U1Eqn);
         U1.correctBoundaryConditions();
         fvOptions.correct(U1);
@@ -56,7 +89,7 @@ volScalarField Kd(fluid.Kd());
         );
         U2Eqn.relax();
         U2Eqn += fvm::Sp(Kd, U2);
-        U2Eqn -= -Kd * phase2.turbulence().nut() * fvc::grad(alpha1);
+        U2Eqn += Ftd;
         fvOptions.constrain(U2Eqn);
         U2.correctBoundaryConditions();
         fvOptions.correct(U2);
