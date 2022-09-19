@@ -124,6 +124,8 @@ int main(int argc, char *argv[])
                 fluid.correctTurbulence();
             }
         }
+        
+        #include "injection.H"
 
         #include "write.H"
 

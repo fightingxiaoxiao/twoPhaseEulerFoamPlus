@@ -47,6 +47,23 @@ tmp<surfaceScalarField> phiF2;
         )
     );
 
+    volScalarField pPrime 
+    (
+        IOobject
+        (
+            "pPrime",
+            runTime.timeName(),
+            mesh,
+            IOobject::NO_READ,
+            IOobject::AUTO_WRITE
+        ),
+        phase1.turbulence().pPrime()
+    );
+
+    if (runTime.outputTime())
+    {
+        pPrime.write();
+    }
     // Phase-2 turbulent dispersion and particle-pressure flux
     surfaceScalarField Df2
     (
