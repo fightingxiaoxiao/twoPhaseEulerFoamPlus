@@ -27,8 +27,6 @@ forAll(patches, i)
 
         tmp<scalarField> uShear = sqrt(mag(ssp()) / fluid.rho()->boundaryField()[i]);
 
-        Info << average(fluid.rho()->boundaryField()[i]) << endl;
-
         forAll(faceCells, i)
         {
             

@@ -96,14 +96,14 @@ int main(int argc, char *argv[])
         ++runTime;
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        #include "injection.H"
-
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
             fluid.solve();
             fluid.correct();
 
+            #include "injection.H"
+            
             #include "contErrs.H"
 
             if (faceMomentum)
