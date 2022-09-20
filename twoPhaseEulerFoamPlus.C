@@ -96,6 +96,8 @@ int main(int argc, char *argv[])
         ++runTime;
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
+        #include "injection.H"
+
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
@@ -124,8 +126,6 @@ int main(int argc, char *argv[])
                 fluid.correctTurbulence();
             }
         }
-        
-        #include "injection.H"
 
         #include "write.H"
 
